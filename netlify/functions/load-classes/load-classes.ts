@@ -62,7 +62,7 @@ async function loadClasses() {
     }
   }
 
-  return classes;
+  return Array.from(classes.values());
 }
 
 export const handler: Handler = async (event, context) => {

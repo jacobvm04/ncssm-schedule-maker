@@ -7,13 +7,7 @@ interface ClassData {
 }
 
 export async function loadClasses() {
-  const why: ClassData = {
-    courseCode: 'dd',
-    courseName: 'dd',
-    courseMeetingPattern: 'dd',
-    fallSemester: true,
-    springSemester: false,
-  };
-
-  return [why];
+  const classRes = await fetch('https://ncssm-schedule-maker.netlify.app/.netlify/functions/load-classes');
+  const classData: ClassData[] = await classRes.json() as ClassData[];
+  console.log(classData);
 }
