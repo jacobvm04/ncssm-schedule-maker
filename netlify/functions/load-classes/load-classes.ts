@@ -68,6 +68,12 @@ async function loadClasses() {
 export const handler: Handler = async (event, context) => {
   return {
     statusCode: 200,
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': '*',
+      'Access-Control-Allow-Methods': 'GET',
+    },
     body: JSON.stringify(await loadClasses()),
   }
 }
