@@ -7,5 +7,13 @@ interface ClassData {
 }
 
 export async function loadClasses() {
+  const why: ClassData = {
+    courseCode: 'dd',
+    courseName: 'dd',
+    courseMeetingPattern: 'dd',
+    fallSemester: true,
+    springSemester: false,
+  };
 
+  return [why];
 }
