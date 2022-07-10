@@ -9,5 +9,6 @@ interface ClassData {
 export async function loadClasses() {
   const classRes = await fetch('https://ncssm-schedule-maker.netlify.app/.netlify/functions/load-classes');
   const classData: ClassData[] = await classRes.json() as ClassData[];
-  console.log(classData);
+  
+  return classData;
 }
