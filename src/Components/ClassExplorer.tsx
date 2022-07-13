@@ -1,15 +1,14 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { loadClasses } from "../DataHandling/ClassLoader";
+import { ClassData, loadClasses } from "../DataHandling/ClassLoader";
+import { findValidSchedules } from "../DataHandling/Schedule";
+import ClassExplorerOption from "./ClassExplorerOption";
 
-interface ClassProp {
-  courseCode: string;
-  courseName: string;
-}
+const schedule: ClassData[] = [];
 
 export default function ClassExplorer() {
-  const [classes, setClasses] = useState<ClassProp[]>([]);
-  const [filteredClasses, setFilteredClasses] = useState<ClassProp[]>([]);
+  const [classes, setClasses] = useState<ClassData[]>([]);
+  const [filteredClasses, setFilteredClasses] = useState<ClassData[]>([]);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
@@ -26,22 +25,30 @@ export default function ClassExplorer() {
         classItem.courseName.toLowerCase().includes(search.toLowerCase())
     );
     setFilteredClasses(newFilteredClasses);
-  }, [search]);
+  }, [search, classes]);
 
-  const classesComponents = filteredClasses.map((classProp) => (
-    <div
-      className="flex flex-col p-4 shadow-sm bg-white rounded-lg"
-      key={classProp.courseCode}
-    >
-      <div className="text-lg">
-        <span className="font-bold">{classProp.courseCode}</span>{" "}
-        {classProp.courseName}
-      </div>
-    </div>
+  function addClass(courseCode: string) {
+    const classData: ClassData = classes.find(
+      (classItem) => classItem.courseCode === courseCode
+    )!;
+
+    // check if new schedule is valid
+    const validSchedules = findValidSchedules(schedule.concat([classData]));
+    console.log("validSchedules", validSchedules);
+    if (validSchedules.length > 0) schedule.push(classData);
+    console.log("schedule", schedule);
+  }
+
+  const classesComponents = filteredClasses.map((classItem) => (
+    <ClassExplorerOption
+      {...classItem}
+      addClass={addClass}
+      key={classItem.courseCode}
+    />
   ));
 
   return (
-    <div className="flex flex-col  p-4 max-w-md w-100 rounded-lg shadow-lg bg-white">
+    <div className="flex flex-col  p-4 max-w-md md:w-100 rounded-lg shadow-lg bg-white">
       <div className="text-2xl font-bold">Class Explorer</div>
 
       <div className="relative mr-4 mt-4">

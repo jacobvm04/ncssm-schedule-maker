@@ -4,7 +4,7 @@ import { GoogleSpreadsheet } from 'google-spreadsheet';
 interface ClassData {
   courseCode: string;
   courseName: string;
-  courseMeetingPattern: string;
+  courseMeetingPatterns: string[];
   fallSemester: boolean;
   springSemester: boolean;
 }
@@ -29,12 +29,14 @@ async function loadClasses() {
 
     if (classes.has(courseCode)) {
       const classData = classes.get(courseCode)!;
+
       classData.fallSemester = true;
+      classData.courseMeetingPatterns.push(row._rawData[3]);
     } else {
       const classData: ClassData = {
         courseCode,
         courseName,
-        courseMeetingPattern: row._rawData[3],
+        courseMeetingPatterns: [row._rawData[3]],
         fallSemester: true,
         springSemester: false,
       };
@@ -49,12 +51,14 @@ async function loadClasses() {
 
     if (classes.has(courseCode)) {
       const classData = classes.get(courseCode)!;
+
       classData.springSemester = true;
+      classData.courseMeetingPatterns.push(row._rawData[3]);
     } else {
       const classData: ClassData = {
         courseCode,
         courseName,
-        courseMeetingPattern: row._rawData[3],
+        courseMeetingPatterns: [row._rawData[3]],
         fallSemester: false,
         springSemester: true,
       };

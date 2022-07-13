@@ -3,20 +3,10 @@ import ReactDOM from "react-dom/client";
 import ClassExplorer from "./Components/ClassExplorer";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
-import { loadClasses } from "./DataHandling/ClassLoader";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
-
-const classes = [
-  { courseCode: "CS101", courseName: "Introduction to Computer Science" },
-  { courseCode: "CS102", courseName: "Introduction to Computer Science" },
-  { courseCode: "CS103", courseName: "Introduction to Computer Science" },
-  { courseCode: "CS104", courseName: "Introduction to Computer Science" },
-  { courseCode: "CS105", courseName: "Introduction to Computer Science" },
-  { courseCode: "CS106", courseName: "Introduction to Computer Science" },
-];
 
 root.render(
   <React.StrictMode>

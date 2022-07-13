@@ -1,7 +1,7 @@
-interface ClassData {
+export interface ClassData {
   courseCode: string;
   courseName: string;
-  courseMeetingPattern: string;
+  courseMeetingPatterns: string[];
   fallSemester: boolean;
   springSemester: boolean;
 }
