@@ -67,7 +67,7 @@ export default function ClassExplorerOption({
     )
       setCantAddFall(true);
     else setCantAddFall(false);
-  }, [courseCode, fallClasses, fallScheduledClasses]);
+  }, [courseCode, fallClasses, fallScheduledClasses, availableFall]);
 
   useEffect(() => {
     const newClass = springClasses.find(
@@ -79,7 +79,7 @@ export default function ClassExplorerOption({
     )
       setCantAddSpring(true);
     else setCantAddSpring(false);
-  }, [courseCode, springClasses, springScheduledClasses]);
+  }, [courseCode, springClasses, springScheduledClasses, availableSpring]);
 
   const classHeader = (
     <div className="text-lg flex">

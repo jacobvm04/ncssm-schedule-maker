@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { AppContextProvider } from "./AppContext";
-import ClassExplorer from "./Components/ClassExplorer";
 import "./index.css";
 import "flowbite";
 
