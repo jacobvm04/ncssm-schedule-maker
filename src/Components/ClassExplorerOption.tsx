@@ -57,6 +57,8 @@ export default function ClassExplorerOption({
   const [cantAddSpring, setCantAddSpring] = useState(false);
 
   useEffect(() => {
+    if (!isOpen) return;
+
     const newClass = fallClasses.find(
       (course) => course.courseCode === courseCode
     )!;
@@ -67,9 +69,11 @@ export default function ClassExplorerOption({
     )
       setCantAddFall(true);
     else setCantAddFall(false);
-  }, [courseCode, fallClasses, fallScheduledClasses, availableFall]);
+  }, [courseCode, fallClasses, fallScheduledClasses, availableFall, isOpen]);
 
   useEffect(() => {
+    if (!isOpen) return;
+
     const newClass = springClasses.find(
       (course) => course.courseCode === courseCode
     )!;
@@ -79,7 +83,13 @@ export default function ClassExplorerOption({
     )
       setCantAddSpring(true);
     else setCantAddSpring(false);
-  }, [courseCode, springClasses, springScheduledClasses, availableSpring]);
+  }, [
+    courseCode,
+    springClasses,
+    springScheduledClasses,
+    availableSpring,
+    isOpen,
+  ]);
 
   const classHeader = (
     <div className="text-lg flex">
