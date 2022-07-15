@@ -24,7 +24,12 @@ function isValidSchedule(schedule: ClassData[], requestedClasses: ClassData[]) {
 }
 
 export function findValidSchedules(requestedClasses: ClassData[]) {
-  const possibleSchedules = [];
+  const possibleSchedules: ClassData[][] = [];
+
+  const courseCodes = requestedClasses.map((classData) => classData.courseCode);
+  const uniqueCourseCodes = [...new Set(courseCodes)];
+  if (courseCodes.length !== uniqueCourseCodes.length)
+    return possibleSchedules;
 
   const blockMap = new Map<string, ClassData[]>();
   for (const classData of requestedClasses) {

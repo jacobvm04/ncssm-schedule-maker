@@ -1,8 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { AppContextProvider } from "./AppContext";
 import ClassExplorer from "./Components/ClassExplorer";
 import "./index.css";
+import "flowbite";
+
 import reportWebVitals from "./reportWebVitals";
+import Layout from "./Components/Layout";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -10,11 +14,9 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <div className="flex justify-center mx-auto bg-gray-100 min-h-screen">
-      <div className="min-h-0">
-        <ClassExplorer />
-      </div>
-    </div>
+    <AppContextProvider>
+      <Layout />
+    </AppContextProvider>
   </React.StrictMode>
 );
 

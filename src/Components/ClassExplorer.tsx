@@ -1,42 +1,82 @@
-import { useEffect } from "react";
+import { useContext, useEffect, useMemo } from "react";
 import { useState } from "react";
-import { ClassData, loadClasses } from "../DataHandling/ClassLoader";
+import { AppContext } from "../AppContext";
+import { ClassData } from "../DataHandling/ClassLoader";
 import { findValidSchedules } from "../DataHandling/Schedule";
 import ClassExplorerOption from "./ClassExplorerOption";
 
-const schedule: ClassData[] = [];
+// TODO: Fix the performance issues with the search bar
 
 export default function ClassExplorer() {
-  const [classes, setClasses] = useState<ClassData[]>([]);
+  const {
+    classesInfo: { fallClasses, springClasses },
+    scheduleInfo: {
+      fallScheduledClasses,
+      setFallScheduledClasses,
+
+      springScheduledClasses,
+      setSpringScheduledClasses,
+
+      setFallPossibleSchedules,
+      setSpringPossibleSchedules,
+    },
+  } = useContext(AppContext)!;
+
   const [filteredClasses, setFilteredClasses] = useState<ClassData[]>([]);
   const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    loadClasses().then((classes) => {
-      setClasses(classes);
-      setFilteredClasses(classes);
-    });
-  }, []);
+  const classes = useMemo(() => {
+    const newSpringClasses = springClasses.filter(
+      (course) =>
+        !fallClasses.some(
+          (fallCourse) => course.courseCode === fallCourse.courseCode
+        )
+    );
+    return [...fallClasses, ...newSpringClasses];
+  }, [springClasses, fallClasses]);
+
+  useEffect(() => setFilteredClasses(classes), [classes]);
 
   useEffect(() => {
     const newFilteredClasses = classes.filter(
-      (classItem) =>
-        classItem.courseCode.toLowerCase().includes(search.toLowerCase()) ||
-        classItem.courseName.toLowerCase().includes(search.toLowerCase())
+      (course) =>
+        course.courseCode.toLowerCase().includes(search.toLowerCase()) ||
+        course.courseName.toLowerCase().includes(search.toLowerCase())
     );
     setFilteredClasses(newFilteredClasses);
   }, [search, classes]);
 
-  function addClass(courseCode: string) {
-    const classData: ClassData = classes.find(
+  function addClass(courseCode: string, isFall: boolean) {
+    const searchClases = isFall ? fallClasses : springClasses;
+    const classData: ClassData | undefined = searchClases.find(
       (classItem) => classItem.courseCode === courseCode
-    )!;
+    );
+    if (!classData) return;
 
-    // check if new schedule is valid
-    const validSchedules = findValidSchedules(schedule.concat([classData]));
-    console.log("validSchedules", validSchedules);
-    if (validSchedules.length > 0) schedule.push(classData);
-    console.log("schedule", schedule);
+    const scheduledClasses = isFall
+      ? fallScheduledClasses
+      : springScheduledClasses;
+    const newSchedule = scheduledClasses.concat([classData]);
+    const validSchedules = findValidSchedules(newSchedule);
+    console.log(isFall ? "fall" : "spring", "validSchedules", validSchedules);
+
+    if (validSchedules.length > 0) {
+      if (isFall) {
+        setFallScheduledClasses(fallScheduledClasses.concat([classData]));
+        setFallPossibleSchedules(validSchedules);
+      } else {
+        setSpringScheduledClasses(springScheduledClasses.concat([classData]));
+        setSpringPossibleSchedules(validSchedules);
+      }
+
+      console.log(
+        isFall ? "fall" : "spring",
+        "schedule",
+        isFall
+          ? fallScheduledClasses.concat([classData])
+          : springScheduledClasses.concat([classData])
+      );
+    }
   }
 
   const classesComponents = filteredClasses.map((classItem) => (
@@ -48,7 +88,7 @@ export default function ClassExplorer() {
   ));
 
   return (
-    <div className="flex flex-col  p-4 max-w-md md:w-100 rounded-lg shadow-lg bg-white">
+    <div className="flex flex-col h-100 p-4 w-screen md:max-w-md md:w-100 rounded-lg shadow-lg bg-white resize-y overflow-hidden">
       <div className="text-2xl font-bold">Class Explorer</div>
 
       <div className="relative mr-4 mt-4">
@@ -76,7 +116,7 @@ export default function ClassExplorer() {
         />
       </div>
 
-      <div className="flex flex-col space-y-4 overflow-auto h-96  w-full bg-gray-200 rounded-lg px-4 py-6 mt-4">
+      <div className="flex flex-col space-y-4 overflow-auto h-full mb-2 w-full bg-gray-200 rounded-lg px-4 py-6 mt-4">
         {classesComponents}
       </div>
     </div>

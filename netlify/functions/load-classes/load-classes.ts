@@ -5,42 +5,37 @@ interface ClassData {
   courseCode: string;
   courseName: string;
   courseMeetingPatterns: string[];
-  fallSemester: boolean;
-  springSemester: boolean;
 }
 
-async function loadClasses() {
+async function loadClasses(): Promise<{ fallClasses: ClassData[]; springClasses: ClassData[]; }> {
   const classMeetingSheet = new GoogleSpreadsheet('1_LO-BQGbiR0LHUL--EyPf_dkVFZezms-H_j40p04XuU');
   classMeetingSheet.useApiKey('AIzaSyA1weQD4Higa2L9de352YNJw-Sl67O1XEk');
 
   await classMeetingSheet.loadInfo();
-  const fallClasses = classMeetingSheet.sheetsByIndex[0];
-  const springClasses = classMeetingSheet.sheetsByIndex[1];
+  const fallClassesSheet = classMeetingSheet.sheetsByIndex[0];
+  const springClassesSheet = classMeetingSheet.sheetsByIndex[1];
 
-  const fallClassesRows = await fallClasses.getRows({ offset: 1, limit: 300 });
-  const springClassesRows = await springClasses.getRows({ offset: 1 , limit: 300 });
+  const fallClassesRows = await fallClassesSheet.getRows({ offset: 1, limit: 300 });
+  const springClassesRows = await springClassesSheet.getRows({ offset: 1 , limit: 300 });
 
-  const classes: Map<string, ClassData> = new Map();
+  const fallClasses: Map<string, ClassData> = new Map();
+  const springClasses: Map<string, ClassData> = new Map();
 
   for (const row of fallClassesRows) {
     const courseNameSplit = row._rawData[2].split(' ');
     const courseCode = courseNameSplit[0];
     const courseName = courseNameSplit.slice(1).join(' ');
 
-    if (classes.has(courseCode)) {
-      const classData = classes.get(courseCode)!;
-
-      classData.fallSemester = true;
+    if (fallClasses.has(courseCode)) {
+      const classData = fallClasses.get(courseCode)!;
       classData.courseMeetingPatterns.push(row._rawData[3]);
     } else {
       const classData: ClassData = {
         courseCode,
         courseName,
-        courseMeetingPatterns: [row._rawData[3]],
-        fallSemester: true,
-        springSemester: false,
+        courseMeetingPatterns: [row._rawData[3]]
       };
-      classes.set(courseCode, classData);
+      fallClasses.set(courseCode, classData);
     }
   }
 
@@ -49,24 +44,23 @@ async function loadClasses() {
     const courseCode = courseNameSplit[0];
     const courseName = courseNameSplit.slice(1).join(' ');
 
-    if (classes.has(courseCode)) {
-      const classData = classes.get(courseCode)!;
-
-      classData.springSemester = true;
+    if (springClasses.has(courseCode)) {
+      const classData = springClasses.get(courseCode)!;
       classData.courseMeetingPatterns.push(row._rawData[3]);
     } else {
       const classData: ClassData = {
         courseCode,
         courseName,
         courseMeetingPatterns: [row._rawData[3]],
-        fallSemester: false,
-        springSemester: true,
       };
-      classes.set(courseCode, classData);
+      springClasses.set(courseCode, classData);
     }
   }
 
-  return Array.from(classes.values());
+  return {
+    fallClasses: Array.from(fallClasses.values()),
+    springClasses: Array.from(springClasses.values()),
+  };
 }
 
 export const handler: Handler = async (event, context) => {

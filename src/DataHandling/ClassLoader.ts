@@ -6,9 +6,14 @@ export interface ClassData {
   springSemester: boolean;
 }
 
-export async function loadClasses() {
+interface ClassLoadRes {
+  fallClasses: ClassData[];
+  springClasses: ClassData[];
+}
+
+export async function loadClasses(): Promise<ClassLoadRes> {
   const classRes = await fetch('https://ncssm-schedule-maker.netlify.app/.netlify/functions/load-classes');
-  const classData: ClassData[] = await classRes.json() as ClassData[];
+  const classData: ClassLoadRes = await classRes.json() as ClassLoadRes;
   
   return classData;
 }
