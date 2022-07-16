@@ -53,20 +53,19 @@ export default function PossibleScheduleViewer({
       ? fallPossibleSchedules
       : springPossibleSchedules;
 
+    const scheduleIndex =
+      currentSchedule - 1 >= possibleSchedules.length ? 0 : currentSchedule - 1;
+
     return blocks
       .filter((block) => {
         const classData =
-          possibleSchedules[currentSchedule - 1][
-            blockToNumMap.get(block.block)!
-          ];
+          possibleSchedules[scheduleIndex][blockToNumMap.get(block.block)!];
 
         return classData.courseCode !== "EMPTY";
       })
       .map((block) => {
         const classData =
-          possibleSchedules[currentSchedule - 1][
-            blockToNumMap.get(block.block)!
-          ];
+          possibleSchedules[scheduleIndex][blockToNumMap.get(block.block)!];
 
         return (
           <div className="p-1 mx-2 shadow-sm bg-white rounded-lg text-sm">
@@ -92,12 +91,18 @@ export default function PossibleScheduleViewer({
 
         <ChevronLeftIcon
           className="-ml-2 w-10 fill-gray-400 hover:fill-gray-600"
-          onClick={() => setIsFall(!isFall)}
+          onClick={() => {
+            setIsFall(!isFall);
+            setCurrentSchedule(1);
+          }}
         />
         <p className="mt-1">{isFall ? "Fall" : "Spring"}</p>
         <ChevronRightIcon
           className="w-10 fill-gray-400 hover:fill-gray-600"
-          onClick={() => setIsFall(!isFall)}
+          onClick={() => {
+            setIsFall(!isFall);
+            setCurrentSchedule(1);
+          }}
         />
       </div>
 
