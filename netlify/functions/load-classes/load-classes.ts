@@ -28,7 +28,9 @@ async function loadClasses(): Promise<{ fallClasses: ClassData[]; springClasses:
 
     if (fallClasses.has(courseCode)) {
       const classData = fallClasses.get(courseCode)!;
-      classData.courseMeetingPatterns.push(row._rawData[3]);
+
+      if (!classData.courseMeetingPatterns.includes(row._rawData[3]))
+        classData.courseMeetingPatterns.push(row._rawData[3]);
     } else {
       const classData: ClassData = {
         courseCode,

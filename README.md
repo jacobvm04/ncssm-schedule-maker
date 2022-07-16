@@ -12,8 +12,8 @@ The class and timetable data is for the 2022-2023 school year.
 - M block classes are currently not able to be scheduled.
 - Depending on the number of users, my google sheets API key could get rate limited.
 - There's currently no loading animation for the classes, it just takes a few seconds to load them due to the relative slow speed of the google sheets API we're working with.
+- There are currently performance issues when you start adding more than 5 or so classes in a semester. It's still usable, but you'll have to wait a few seconds every time you press a button.
 - In the possible schedules tab, classes meeting during a lab block are currently assumed to be labs. This is not always the case in actuality.
-- Also in the possible schedules tab, classes are assumed to meet at every period their block is able to. This is not the case for some classes.
 
 These issues are being worked on and presumably will be resolved soon.
 

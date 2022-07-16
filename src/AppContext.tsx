@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { ClassData, loadClasses } from "./DataHandling/ClassLoader";
-import { EmptyClassData } from "./DataHandling/Schedule";
+import { EmptyClassData, ScheduledClassData } from "./DataHandling/Schedule";
 
 interface AppContextInterface {
   classesInfo: {
@@ -15,14 +15,18 @@ interface AppContextInterface {
     fallScheduledClasses: ClassData[];
     setFallScheduledClasses: (scheduledClasses: ClassData[]) => void;
 
-    fallPossibleSchedules: ClassData[][];
-    setFallPossibleSchedules: (possibleSchedules: ClassData[][]) => void;
+    fallPossibleSchedules: ScheduledClassData[][][];
+    setFallPossibleSchedules: (
+      possibleSchedules: ScheduledClassData[][][]
+    ) => void;
 
     springScheduledClasses: ClassData[];
     setSpringScheduledClasses: (scheduledClasses: ClassData[]) => void;
 
-    springPossibleSchedules: ClassData[][];
-    setSpringPossibleSchedules: (possibleSchedules: ClassData[][]) => void;
+    springPossibleSchedules: ScheduledClassData[][][];
+    setSpringPossibleSchedules: (
+      possibleSchedules: ScheduledClassData[][][]
+    ) => void;
   };
 }
 
@@ -36,30 +40,30 @@ export function AppContextProvider({
   const [fallClasses, setFallClasses] = useState<ClassData[]>([]);
   const [springClasses, setSpringClasses] = useState<ClassData[]>([]);
 
-  const emptySchedule: ClassData[] = [
-    EmptyClassData,
-    EmptyClassData,
-    EmptyClassData,
-    EmptyClassData,
-    EmptyClassData,
-    EmptyClassData,
-    EmptyClassData,
-    EmptyClassData,
-    EmptyClassData,
+  const emptySchedule: ScheduledClassData[][] = [
+    [EmptyClassData],
+    [EmptyClassData],
+    [EmptyClassData],
+    [EmptyClassData],
+    [EmptyClassData],
+    [EmptyClassData],
+    [EmptyClassData],
+    [EmptyClassData],
+    [EmptyClassData],
   ];
 
   const [fallScheduledClasses, setFallScheduledClasses] = useState<ClassData[]>(
     []
   );
   const [fallPossibleSchedules, setFallPossibleSchedules] = useState<
-    ClassData[][]
+    ScheduledClassData[][][]
   >([emptySchedule]);
 
   const [springScheduledClasses, setSpringScheduledClasses] = useState<
     ClassData[]
   >([]);
   const [springPossibleSchedules, setSpringPossibleSchedules] = useState<
-    ClassData[][]
+    ScheduledClassData[][][]
   >([emptySchedule]);
 
   useEffect(() => {

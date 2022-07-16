@@ -1,7 +1,10 @@
 import { useContext } from "react";
 import { AppContext } from "../AppContext";
 import { ClassData } from "../DataHandling/ClassLoader";
-import { findValidSchedules } from "../DataHandling/Schedule";
+import {
+  findValidSchedules,
+  ScheduledClassData,
+} from "../DataHandling/Schedule";
 import ClassExplorer from "./ClassExplorer";
 import PossibleScheduleViewer from "./PossibleScheduleViewer";
 import ScheduleViewer from "./ScheduleViewer";
@@ -26,7 +29,7 @@ export default function Layout() {
   function getRemoveClassCallback(
     classes: ClassData[],
     setClasses: (classes: ClassData[]) => void,
-    setPossibleSchedules: (possibleSchedules: ClassData[][]) => void
+    setPossibleSchedules: (possibleSchedules: ScheduledClassData[][][]) => void
   ) {
     return (classData: ClassData) => {
       const newClasses = classes.filter(

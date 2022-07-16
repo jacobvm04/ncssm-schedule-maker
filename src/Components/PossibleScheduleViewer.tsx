@@ -1,6 +1,6 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import { useEffect, useState } from "react";
-import { ClassData } from "../DataHandling/ClassLoader";
+import { ScheduledClassData } from "../DataHandling/Schedule";
 import Timetable2022 from "../Timetables/Timetable2022.json";
 
 interface ClassBlock {
@@ -32,8 +32,8 @@ const blockToNumMap = new Map<string, number>([
 ]);
 
 interface PossibleScheduleViewerProps {
-  fallPossibleSchedules: ClassData[][];
-  springPossibleSchedules: ClassData[][];
+  fallPossibleSchedules: ScheduledClassData[][][];
+  springPossibleSchedules: ScheduledClassData[][][];
 }
 
 export default function PossibleScheduleViewer({
@@ -48,7 +48,7 @@ export default function PossibleScheduleViewer({
     [fallPossibleSchedules, springPossibleSchedules]
   );
 
-  function getBlockElements(blocks: ClassBlock[]) {
+  function getBlockElements(blocks: ClassBlock[], dayIdx: number) {
     const possibleSchedules = isFall
       ? fallPossibleSchedules
       : springPossibleSchedules;
@@ -58,14 +58,26 @@ export default function PossibleScheduleViewer({
 
     return blocks
       .filter((block) => {
-        const classData =
+        const classDatums =
           possibleSchedules[scheduleIndex][blockToNumMap.get(block.block)!];
 
-        return classData.courseCode !== "EMPTY";
+        // find the class data with the day of the current block
+        const classData = classDatums.find(
+          (classDatum) => classDatum.assignedMeetingPattern.days[dayIdx]
+        );
+
+        return classData !== undefined && classData.courseCode !== "EMPTY";
+
+        // return classData.courseCode !== "EMPTY";
       })
       .map((block) => {
-        const classData =
+        const classDatums =
           possibleSchedules[scheduleIndex][blockToNumMap.get(block.block)!];
+
+        // find the class data with the day of the current block
+        const classData = classDatums.find(
+          (classDatum) => classDatum.assignedMeetingPattern.days[dayIdx]
+        )!;
 
         return (
           <div className="p-1 mx-2 shadow-sm bg-white rounded-lg text-sm">
@@ -76,11 +88,11 @@ export default function PossibleScheduleViewer({
       });
   }
 
-  const mondayBlocks = getBlockElements(timetable.monday);
-  const tuesdayBlocks = getBlockElements(timetable.tuesday);
-  const wednesdayBlocks = getBlockElements(timetable.wednesday);
-  const thursdayBlocks = getBlockElements(timetable.thursday);
-  const fridayBlocks = getBlockElements(timetable.friday);
+  const mondayBlocks = getBlockElements(timetable.monday, 0);
+  const tuesdayBlocks = getBlockElements(timetable.tuesday, 1);
+  const wednesdayBlocks = getBlockElements(timetable.wednesday, 2);
+  const thursdayBlocks = getBlockElements(timetable.thursday, 3);
+  const fridayBlocks = getBlockElements(timetable.friday, 4);
 
   return (
     <div className="flex flex-col p-4 rounded-lg shadow-lg bg-white md:mx-8 mb-8 px-8">
