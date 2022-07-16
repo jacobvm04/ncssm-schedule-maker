@@ -1,6 +1,6 @@
 import { ClassData } from "./ClassLoader";
 
-const emptyClassData: ClassData = {
+export const EmptyClassData: ClassData = {
   courseCode: "EMPTY",
   courseName: "EMPTY",
   courseMeetingPatterns: [],
@@ -47,9 +47,9 @@ export function findValidSchedules(requestedClasses: ClassData[]) {
   
   for (const block of blocks)
     if (!blockMap.has(block))
-      blockMap.set(block, [emptyClassData]);
+      blockMap.set(block, [EmptyClassData]);
     else
-      blockMap.get(block)!.push(emptyClassData);
+      blockMap.get(block)!.push(EmptyClassData);
 
   for (const blockA of blockMap.get(blocks[0])!)
     for (const blockB of blockMap.get(blocks[1])!)

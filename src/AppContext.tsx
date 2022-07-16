@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { ClassData, loadClasses } from "./DataHandling/ClassLoader";
+import { EmptyClassData } from "./DataHandling/Schedule";
 
 interface AppContextInterface {
   classesInfo: {
@@ -35,19 +36,31 @@ export function AppContextProvider({
   const [fallClasses, setFallClasses] = useState<ClassData[]>([]);
   const [springClasses, setSpringClasses] = useState<ClassData[]>([]);
 
+  const emptySchedule: ClassData[] = [
+    EmptyClassData,
+    EmptyClassData,
+    EmptyClassData,
+    EmptyClassData,
+    EmptyClassData,
+    EmptyClassData,
+    EmptyClassData,
+    EmptyClassData,
+    EmptyClassData,
+  ];
+
   const [fallScheduledClasses, setFallScheduledClasses] = useState<ClassData[]>(
     []
   );
   const [fallPossibleSchedules, setFallPossibleSchedules] = useState<
     ClassData[][]
-  >([]);
+  >([emptySchedule]);
 
   const [springScheduledClasses, setSpringScheduledClasses] = useState<
     ClassData[]
   >([]);
   const [springPossibleSchedules, setSpringPossibleSchedules] = useState<
     ClassData[][]
-  >([]);
+  >([emptySchedule]);
 
   useEffect(() => {
     loadClasses().then((classes) => {
